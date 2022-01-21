@@ -1,0 +1,55 @@
+class Solution {
+
+    List<List<String>> result = new ArrayList<>();
+    Deque<String> temp = new LinkedList<>();
+
+    public List<List<String>> partition(String s) {
+        int n = s.length();
+        boolean[][] valid = new boolean[n][n];
+        for (int m = 0; m < n; ++m) {
+            for (int k = 0; k < n; ++k) {
+                valid[m][k] = true;
+            }
+        }
+        // initialize valid array O(n^2)
+        for (int len = 2; len <= n; ++len)  {
+            for (int i = 0, j = i + len - 1; j < n; ++i, ++j) {
+                valid[i][j] = valid[i+1][j-1] && (s.charAt(i) == s.charAt(j));
+            }
+        }
+        backtracking(s, 0, valid);
+        return result;
+    }
+
+    public void backtracking(String s, int startIndex, boolean[][] valid) {
+        if (startIndex >= s.length()) {
+            result.add(new ArrayList(temp));
+            return;
+        }
+        for (int i = startIndex; i < s.length(); i++) {
+            if (valid[startIndex][i]) {
+                String sub = s.substring(startIndex, i+1);
+                temp.add(sub);
+            } else {
+                continue;
+            }
+            backtracking(s, i+1, valid);
+            temp.removeLast();
+        }
+    }
+
+//    public boolean isPalindrome(String s, int startIndex, int end, int[][] booleans) {
+//        char[] chars = s.toCharArray();
+//        for (int i = startIndex, j = end; i < j; i++, j--) {
+//            if (chars[i] != chars[j]) {
+//                booleans[startIndex][end] = -1;
+//                return false;
+//            }
+//        }
+//        booleans[startIndex][end] = 1;
+//        return booleans[startIndex][end] == 1;
+//    }
+}
+
+//runtime:10 ms
+//memory:51.4 MB

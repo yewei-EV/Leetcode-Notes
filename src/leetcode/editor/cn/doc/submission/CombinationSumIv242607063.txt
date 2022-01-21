@@ -1,0 +1,40 @@
+class Solution {
+
+        public int combinationSum4(int[] nums, int target) {
+            int[] memo = new int[target + 1];
+            Arrays.fill(memo, -1);
+            memo[0] = 1;
+            return backtrack(nums, target, memo);
+        }
+
+        public int backtrack(int[] nums, int target, int[] memo) {
+            if (memo[target] != -1) {
+                return memo[target];
+            }
+            int res = 0;
+            for (int num:nums) {
+                if (num <= target) {
+                    res += backtrack(nums, target - num, memo);
+                }
+            }
+            memo[target] = res;
+            return res;
+        }
+
+        //DP
+//    public int combinationSum4(int[] nums, int target) {
+//        int[] dp = new int[target + 1];
+//        dp[0] = 1;
+//        for (int j = 1; j <= target; j++) {
+//            for (int num: nums) {
+//                if (j >= num) {
+//                    dp[j] = dp[j] + dp[j - num];
+//                }
+//            }
+//        }
+//        return dp[target];
+//    }
+}
+
+//runtime:0 ms
+//memory:35.8 MB
