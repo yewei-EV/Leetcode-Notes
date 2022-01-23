@@ -1,8 +1,0 @@
-class Solution {
-    public boolean isValid(String s) {
-    w
-    }
-}
-
-//runtime:1 ms
-//memory:36.2 MB
