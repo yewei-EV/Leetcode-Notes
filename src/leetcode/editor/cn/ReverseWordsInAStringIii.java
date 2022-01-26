@@ -37,26 +37,25 @@ public class ReverseWordsInAStringIii {
     //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
     public String reverseWords(String s) {
-        StringBuilder sb = new StringBuilder(s);
-        int left = 0; int right = 0;
-        while (right < sb.length()) {
-            if (sb.charAt(right) != ' ') {
-                right++;
-            } else {
-                reverse(sb, left, right - 1);
-                right++;
-                left = right;
+        char[] arr = s.toCharArray();
+        int n = arr.length;
+        int left = 0;
+        int right = 0;
+        while (right <= n) {
+            if (right == n || arr[right] == ' ') {
+                swap(arr, left, right - 1);
+                left = right + 1;
             }
+            right++;
         }
-        reverse(sb, left, right - 1);
-        return sb.toString();
+        return new String(arr);
     }
 
-    public void reverse(StringBuilder sb, int start, int end) {
+    public void swap(char[] sb, int start, int end) {
         while (start < end) {
-            char temp = sb.charAt(start);
-            sb.setCharAt(start, sb.charAt(end));
-            sb.setCharAt(end, temp);
+            char temp = sb[start];
+            sb[start] = sb[end];
+            sb[end] = temp;
             start++;
             end--;
         }
