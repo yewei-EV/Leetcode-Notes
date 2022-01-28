@@ -78,31 +78,31 @@ public class MaximumWidthOfBinaryTree {
 class Solution {
     public class MyTreeNode {
         TreeNode treeNode;
-        int depth;
         int pos;
-        MyTreeNode(TreeNode treeNode, int depth, int pos) {
+        MyTreeNode(TreeNode treeNode, int pos) {
             this.treeNode = treeNode;
-            this.depth = depth;
             this.pos = pos;
         }
     }
     public int widthOfBinaryTree(TreeNode root) {
         Queue<MyTreeNode> queue = new LinkedList<>();
-        queue.offer(new MyTreeNode(root, 0, 0));
-        int curDepth = 0;
+        queue.offer(new MyTreeNode(root,  0));
         int firstPos = 0;
         int max = 0;
 
         while (!queue.isEmpty()) {
-            MyTreeNode cur = queue.poll();
-            if (cur.treeNode != null) {
-                queue.offer(new MyTreeNode(cur.treeNode.left, cur.depth + 1, 2 * cur.pos));
-                queue.offer(new MyTreeNode(cur.treeNode.right, cur.depth + 1, 2 * cur.pos + 1));
-                if (curDepth != cur.depth) {
-                    curDepth = cur.depth;
-                    firstPos = cur.pos;
+            int size = queue.size();
+            firstPos = -1;
+            for (int i = 0; i < size; i++) {
+                MyTreeNode cur = queue.poll();
+                if (cur.treeNode != null) {
+                    queue.offer(new MyTreeNode(cur.treeNode.left,  2 * cur.pos));
+                    queue.offer(new MyTreeNode(cur.treeNode.right, 2 * cur.pos + 1));
+                    if (firstPos == -1) {
+                        firstPos = cur.pos;
+                    }
+                    max = Math.max(max, cur.pos - firstPos + 1);
                 }
-                max = Math.max(max, cur.pos - firstPos + 1);
             }
         }
         return max;
