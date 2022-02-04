@@ -54,7 +54,7 @@ class Solution {
         while (l <= r) {
             int m = l + (r - l)/2;
             if (nums[m] == target) return m;
-            if (nums[m] < nums[r]) {
+            if (nums[m] < nums[nums.length - 1]) {
                 // m+1 to r is ordered
                 if (target <= nums[r] && target > nums[m]) {
                     l = m + 1;
