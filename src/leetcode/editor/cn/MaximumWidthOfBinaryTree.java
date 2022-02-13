@@ -86,13 +86,12 @@ class Solution {
     }
     public int widthOfBinaryTree(TreeNode root) {
         Queue<MyTreeNode> queue = new LinkedList<>();
-        queue.offer(new MyTreeNode(root,  0));
-        int firstPos = 0;
+        queue.offer(new MyTreeNode(root,  1));
         int max = 0;
 
         while (!queue.isEmpty()) {
             int size = queue.size();
-            firstPos = -1;
+            int firstPos = -1;
             for (int i = 0; i < size; i++) {
                 MyTreeNode cur = queue.poll();
                 if (cur.treeNode != null) {
