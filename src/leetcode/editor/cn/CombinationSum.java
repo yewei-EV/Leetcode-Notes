@@ -73,17 +73,20 @@ class Solution {
     }
 
     public void backtracking(int[] candidates, int target, List<List<Integer>> result, List<Integer> ans, int index) {
-        if (target == 0) {
+        if (target < 0) {
+            return;
+        } else if (target == 0) {
             result.add(new ArrayList<>(ans));
             return;
-        }
-        for (int i = index; i < candidates.length; i++) {
-            if (candidates[i] <= target) {
-                ans.add(candidates[i]);
-                backtracking(candidates, target - candidates[i], result, ans, i);
-                ans.remove(ans.size() - 1);
-            } else {
-                break;
+        } else {
+            for (int i = index; i < candidates.length; i++) {
+                if (candidates[i] <= target) {
+                    ans.add(candidates[i]);
+                    backtracking(candidates, target - candidates[i], result, ans, i);
+                    ans.remove(ans.size() - 1);
+                } else {
+                    break;
+                }
             }
         }
     }

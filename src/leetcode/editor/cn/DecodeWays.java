@@ -75,25 +75,47 @@ public class DecodeWays {
     //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
     public int numDecodings(String s) {
-        if (s == null || s.length() == 0) {
+        int[] memo = new int[s.length()+1];
+        return helper(s, s.length(), memo);
+//        if (s == null || s.length() == 0) {
+//            return 0;
+//        }
+//        int n = s.length();
+//        int[] dp = new int[n+1];
+//        dp[0] = 1;
+//        dp[1] = s.charAt(0) == '0' ? 0 : 1;
+//        for (int i = 2; i <= n; i++) {
+//            if (s.charAt(i-1) != '0') {
+//                dp[i] += dp[i - 1];
+//            }
+//            if (s.charAt(i-2) - '0' <= 2 && s.charAt(i-2) != '0') {
+//                if (s.charAt(i-2) == '2' && s.charAt(i-1) - '0' > 6) {
+//                    continue;
+//                }
+//                dp[i] += dp[i - 2];
+//            }
+//        }
+//        return dp[n];
+    }
+
+    public int helper(String s, int len, int[] memo) {
+        int n = s.length();
+        if (len <= 0) {
+            return 1;
+        }
+        int k = n - len;
+        if (s.charAt(k) == '0') {
             return 0;
         }
-        int n = s.length();
-        int[] dp = new int[n+1];
-        dp[0] = 1;
-        dp[1] = s.charAt(0) == '0' ? 0 : 1;
-        for (int i = 2; i <= n; i++) {
-            if (s.charAt(i-1) != '0') {
-                dp[i] += dp[i - 1];
-            }
-            if (s.charAt(i-2) - '0' <= 2 && s.charAt(i-2) != '0') {
-                if (s.charAt(i-2) == '2' && s.charAt(i-1) - '0' > 6) {
-                    continue;
-                }
-                dp[i] += dp[i - 2];
-            }
+        if (memo[len] != 0) {
+            return memo[len];
         }
-        return dp[n];
+        int result = helper(s, len - 1, memo);
+        if (len >= 2 && Integer.parseInt(s.substring(k, k + 2)) <= 26) {
+            result += helper(s, len - 2, memo);
+        }
+        memo[len] = result;
+        return result;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)

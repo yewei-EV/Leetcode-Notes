@@ -51,9 +51,9 @@ class Solution {
             if(i > 0 && nums[i] == nums[i-1]) continue;
             int L = i + 1;
             int R = len - 1;
-            while(L < R){
+            while (L < R){
                 int sum = nums[i] + nums[L] + nums[R];
-                if(sum == 0){
+                if (sum == 0){
                     ans.add(Arrays.asList(nums[i],nums[L],nums[R]));
                     while (L<R && nums[L] == nums[L+1]) L++; // 去重
                     while (L<R && nums[R] == nums[R-1]) R--; // 去重

@@ -72,7 +72,11 @@ class Solution {
         dp[0] = 0;
         int max = Integer.MIN_VALUE;
         for (int i = 1; i <= n; i++) {
-            dp[i] = Math.max(nums[i-1], dp[i-1] + nums[i-1]);
+            if (dp[i-1] < 0) {
+                dp[i] = nums[i-1];
+            } else {
+                dp[i] = dp[i-1] + nums[i-1];
+            }
             max = Math.max(max, dp[i]);
         }
         return max;
