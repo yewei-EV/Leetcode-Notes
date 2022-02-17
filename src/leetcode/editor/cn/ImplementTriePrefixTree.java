@@ -50,6 +50,10 @@
 // Related Topics 设计 字典树 哈希表 字符串 👍 1024 👎 0
 
 package leetcode.editor.cn;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class ImplementTriePrefixTree {
     public static void main(String[] args) {
         Solution solution = new ImplementTriePrefixTree().new Solution();
@@ -67,10 +71,10 @@ class Trie {
     public void insert(String word) {
         TrieNode node = root;
         for (int i = 0; i < word.length(); ++i) {
-            if (node.nextMap[word.charAt(i) - 'a'] == null) {
-                node.nextMap[word.charAt(i) - 'a'] = new TrieNode();
+            if (node.nextMap.get(word.charAt(i)) == null) {
+                node.nextMap.put(word.charAt(i), new TrieNode());
             }
-            node = node.nextMap[word.charAt(i) - 'a'];
+            node = node.nextMap.get(word.charAt(i));
         }
         node.isEnd = true;
     }
@@ -78,10 +82,10 @@ class Trie {
     public boolean search(String word) {
         TrieNode node = root;
         for (int i = 0; i < word.length(); ++i) {
-            if (node.nextMap[word.charAt(i) - 'a'] == null) {
+            if (node.nextMap.get(word.charAt(i)) == null) {
                 return false;
             }
-            node = node.nextMap[word.charAt(i) - 'a'];
+            node = node.nextMap.get(word.charAt(i));
         }
         return node.isEnd;
     }
@@ -89,20 +93,20 @@ class Trie {
     public boolean startsWith(String prefix) {
         TrieNode node = root;
         for (int i = 0; i < prefix.length(); ++i) {
-            if (node.nextMap[prefix.charAt(i) - 'a'] == null) {
+            if (node.nextMap.get(prefix.charAt(i)) == null) {
                 return false;
             }
-            node = node.nextMap[prefix.charAt(i) - 'a'];
+            node = node.nextMap.get(prefix.charAt(i));
         }
         return true;
     }
 
     class TrieNode {
-        TrieNode[] nextMap;
+        Map<Character, TrieNode> nextMap;
         boolean isEnd;
 
-        TrieNode() {
-            nextMap = new TrieNode[26];
+        public TrieNode() {
+            nextMap = new HashMap<>();
             isEnd = false;
         }
     }
