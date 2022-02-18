@@ -62,6 +62,16 @@ public class ImplementTriePrefixTree {
     //leetcode submit region begin(Prohibit modification and deletion)
 class Trie {
 
+    class TrieNode {
+        Map<Character, TrieNode> nextMap;
+        boolean isEnd;
+
+        public TrieNode() {
+            nextMap = new HashMap<>();
+            isEnd = false;
+        }
+    }
+
     TrieNode root;
 
     public Trie() {
@@ -99,16 +109,6 @@ class Trie {
             node = node.nextMap.get(prefix.charAt(i));
         }
         return true;
-    }
-
-    class TrieNode {
-        Map<Character, TrieNode> nextMap;
-        boolean isEnd;
-
-        public TrieNode() {
-            nextMap = new HashMap<>();
-            isEnd = false;
-        }
     }
 }
 
