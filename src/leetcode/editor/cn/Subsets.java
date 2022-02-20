@@ -46,21 +46,20 @@ public class Subsets {
     }
     //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
-    List<List<Integer>> result = new ArrayList<>();
 
     public List<List<Integer>> subsets(int[] nums) {
-        result.add(new ArrayList<>());
-        List<Integer> str = new ArrayList<>();
-        dfs(nums, str,0);
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> temp = new ArrayList<>();
+        dfs(nums, result, temp,0);
         return result;
     }
 
-    public void dfs(int[] nums, List<Integer> str, int index) {
+    public void dfs(int[] nums, List<List<Integer>> result, List<Integer> temp, int index) {
+        result.add(new ArrayList<>(temp));
         for (int i = index; i < nums.length; i++) {
-            str.add(nums[i]);
-            result.add(new ArrayList<>(str));
-            dfs(nums, str, i+1);
-            str.remove(str.size()-1);
+            temp.add(nums[i]);
+            dfs(nums, result, temp,i+1);
+            temp.remove(temp.size()-1);
         }
     }
 }

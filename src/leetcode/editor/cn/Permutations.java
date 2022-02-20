@@ -39,59 +39,57 @@ public class Permutations {
     }
     //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        dfs(result, nums, new ArrayList<>());
+        return result;
+    }
 
-        public List<List<Integer>> permute(int[] nums) {
-            List<List<Integer>> result = new ArrayList<>();
-            dfs(result, nums, 0);
-            return  result;
+    public void dfs(List<List<Integer>> result, int[] nums, List<Integer> container) {
+        //base case
+        if (container.size() == nums.length) {
+            result.add(new ArrayList<>(container));
+            return;
         }
 
-        public void dfs(List<List<Integer>> result, int[] nums, int index) {
-            //base case
-            if (index >= nums.length) {
-                List<Integer> answer = new ArrayList<>();
-                for (int num : nums) {
-                    answer.add(num);
-                }
-                result.add(answer);
-            }
-
-            for (int i = index; i < nums.length; i++) {
-                switchNums(nums, index, i);
-                dfs(result, nums, index + 1);
-                switchNums(nums, i, index);
+        for (int num : nums) {
+            if (!container.contains(num)) {
+                container.add(num);
+                dfs(result, nums, container);
+                container.remove(container.size() - 1);
             }
         }
+    }
 
-        public void switchNums(int[] nums, int i1, int i2) {
-            int temp = nums[i1];
-            nums[i1] = nums[i2];
-            nums[i2] = temp;
-        }
-
-        //    //solution 2
-//    public List<List<Integer>> permute(int[] nums) {
-//        List<List<Integer>> result = new ArrayList<>();
-//        List<Integer> container = new ArrayList<>();
-//        dfs(result, nums, container);
-//        return result;
-//    }
-//
-//    public void dfs(List<List<Integer>> result, int[] nums, List<Integer> container) {
-//        //base case
-//        if (container.size() == nums.length) {
-//            result.add(new ArrayList<>(container));
-//            return;
+//        public List<List<Integer>> permute(int[] nums) {
+//            List<List<Integer>> result = new ArrayList<>();
+//            dfs(result, nums, 0);
+//            return  result;
 //        }
 //
-//        for (int num : nums) {
-//            if (!container.contains(num)) {
-//                container.add(num);
-//                dfs(result, nums, container);
-//                container.remove(container.size() - 1);
+//        public void dfs(List<List<Integer>> result, int[] nums, int index) {
+//            //base case
+//            if (index >= nums.length) {
+//                List<Integer> answer = new ArrayList<>();
+//                for (int num : nums) {
+//                    answer.add(num);
+//                }
+//                result.add(answer);
+//            }
+//
+//            for (int i = index; i < nums.length; i++) {
+//                switchNums(nums, index, i);
+//                dfs(result, nums, index + 1);
+//                switchNums(nums, i, index);
 //            }
 //        }
-//    }
+//
+//        public void switchNums(int[] nums, int i1, int i2) {
+//            int temp = nums[i1];
+//            nums[i1] = nums[i2];
+//            nums[i2] = temp;
+//        }
+
 }
 //leetcode submit region end(Prohibit modification and deletion)
 

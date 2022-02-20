@@ -58,7 +58,7 @@ class Solution {
     }
 
     public void backtracking(String s, int startIndex, boolean[][] valid, List<String> ans) {
-        if (startIndex >= s.length()) {
+        if (startIndex == s.length()) {
             result.add(new ArrayList<>(ans));
             return;
         }
@@ -66,11 +66,9 @@ class Solution {
             if (valid[startIndex][i]) {
                 String sub = s.substring(startIndex, i+1);
                 ans.add(sub);
-            } else {
-                continue;
+                backtracking(s, i+1, valid, ans);
+                ans.remove(ans.size() - 1);
             }
-            backtracking(s, i+1, valid, ans);
-            ans.remove(ans.size() - 1);
         }
     }
 }

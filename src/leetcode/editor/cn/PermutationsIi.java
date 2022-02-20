@@ -35,10 +35,7 @@
 
 package leetcode.editor.cn;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class PermutationsIi {
     public static void main(String[] args) {
@@ -50,33 +47,28 @@ class Solution {
 
     public List<List<Integer>> permuteUnique(int[] nums) {
         List<List<Integer>> result = new ArrayList<>();
-        backtracking(nums, result, 0);
+        Arrays.sort(nums);
+        boolean[] visited = new boolean[nums.length];
+        backtracking(nums, result, new ArrayList<>(), visited);
         return result;
     }
 
-    public void backtracking(int[] nums, List<List<Integer>> result, int index) {
+    public void backtracking(int[] nums, List<List<Integer>> result, List<Integer> temp, boolean[] visited) {
         // base case
-        if (index >= nums.length) {
-            List<Integer> ans = new ArrayList<>();
-            for(int num: nums) {
-                ans.add(num);
+        if (temp.size() == nums.length) {
+            result.add(new ArrayList<>(temp));
+        } else {
+            for (int i = 0; i < nums.length; ++i) {
+                if (visited[i] || (i > 0 && nums[i] == nums[i - 1] && !visited[i-1])) {
+                    continue;
+                }
+                visited[i] = true;
+                temp.add(nums[i]);
+                backtracking(nums, result, temp, visited);
+                temp.remove(temp.size() - 1);
+                visited[i] = false;
             }
-            result.add(ans);
         }
-
-        Set<Integer> visited = new HashSet<>();
-        for (int i = index; i < nums.length; ++i) {
-            if (!visited.add(nums[i])) continue;
-            switchNums(nums, i, index);
-            backtracking(nums, result, index + 1);
-            switchNums(nums, index, i);
-        }
-    }
-
-    public void switchNums(int[] nums, int i1, int i2) {
-        int temp = nums[i1];
-        nums[i1] = nums[i2];
-        nums[i2] = temp;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)

@@ -40,25 +40,25 @@ public class SubsetsIi {
     //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
 
-    List<List<Integer>> result = new ArrayList<>();
-
     public List<List<Integer>> subsetsWithDup(int[] nums) {
-        result.add(new ArrayList<>());
-        List<Integer> str = new ArrayList<>();
-        Arrays.sort(nums);
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> temp = new ArrayList<>();
         boolean[] visited = new boolean[nums.length+1];
-        backtracking(nums, str, 0, visited);
+        Arrays.sort(nums);
+        dfs(nums, result, temp,0, visited);
         return result;
     }
 
-    public void backtracking(int[] nums, List<Integer> str, int index, boolean[] visited) {
-        for (int i = index; i < nums.length; ++i) {
-            if (i >= 1 && !visited[i-1] && nums[i] == nums[i-1]) continue;
+    public void dfs(int[] nums, List<List<Integer>> result, List<Integer> temp, int index, boolean[] visited) {
+        result.add(new ArrayList<>(temp));
+        for (int i = index; i < nums.length; i++) {
+            if (i >= 1 && !visited[i-1] && nums[i] == nums[i-1]) {
+                continue;
+            }
+            temp.add(nums[i]);
             visited[i] = true;
-            str.add(nums[i]);
-            result.add(new ArrayList<>(str));
-            backtracking(nums, str, i + 1, visited);
-            str.remove(str.size() - 1);
+            dfs(nums, result, temp,i+1, visited);
+            temp.remove(temp.size()-1);
             visited[i] = false;
         }
     }

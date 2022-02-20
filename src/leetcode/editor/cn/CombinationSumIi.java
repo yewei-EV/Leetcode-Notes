@@ -62,7 +62,7 @@ class Solution {
     public List<List<Integer>> combinationSum2(int[] candidates, int target) {
         List<List<Integer>> result = new ArrayList<>();
         Arrays.sort(candidates);
-        boolean[] visited = new boolean[candidates.length+1];
+        boolean[] visited = new boolean[candidates.length];
         backtracking(candidates, target, result, new ArrayList<>(), 0, visited);
         return result;
     }
@@ -72,17 +72,20 @@ class Solution {
         if (target == 0) {
             result.add(new ArrayList<>(ans));
             return;
-        }
-        for (int i = index; i < candidates.length; i++) {
-            if (i > 0 && candidates[i] == candidates[i-1] && !visited[i-1]) continue;
-            if (candidates[i] <= target) {
-                visited[i] = true;
-                ans.add(candidates[i]);
-                backtracking(candidates, target - candidates[i], result, ans, i+1, visited);
-                ans.remove(ans.size() - 1);
-                visited[i] = false;
-            } else {
-                break;
+        } else if (target < 0) {
+            return;
+        } else {
+            for (int i = index; i < candidates.length; i++) {
+                if (i > 0 && candidates[i] == candidates[i-1] && !visited[i-1]) continue;
+                if (candidates[i] <= target) {
+                    visited[i] = true;
+                    ans.add(candidates[i]);
+                    backtracking(candidates, target - candidates[i], result, ans, i+1, visited);
+                    ans.remove(ans.size() - 1);
+                    visited[i] = false;
+                } else {
+                    break;
+                }
             }
         }
     }
