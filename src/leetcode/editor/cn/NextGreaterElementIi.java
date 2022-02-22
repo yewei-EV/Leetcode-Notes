@@ -40,8 +40,8 @@
 
 package leetcode.editor.cn;
 
-import java.util.Arrays;
-import java.util.Stack;
+import java.util.Deque;
+import java.util.LinkedList;
 
 public class NextGreaterElementIi {
     public static void main(String[] args) {
@@ -52,17 +52,15 @@ public class NextGreaterElementIi {
 class Solution {
     public int[] nextGreaterElements(int[] nums) {
         int n = nums.length;
-        Stack<Integer> stack = new Stack<>();
+        Deque<Integer> stack = new LinkedList<>();
         int[] ans = new int[n];
-        Arrays.fill(ans, -1);
-        for (int i = 0; i < 2 * n; ++i) {
-            while (!stack.isEmpty() && nums[stack.peek()] < nums[i % n]) {
-                int index = stack.pop();
-                ans[index] = nums[i % n];
+        for (int i = 2 * n - 1; i >= 0; --i) {
+            int cur = nums[i % n];
+            while (!stack.isEmpty() && stack.peek() <= cur) {
+                stack.pop();
             }
-            if (i < n) {
-                stack.add(i);
-            }
+            ans[i % n] = stack.isEmpty() ? -1 : stack.peek();
+            stack.push(cur);
         }
         return ans;
     }
