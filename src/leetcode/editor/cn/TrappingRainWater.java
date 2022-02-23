@@ -35,6 +35,11 @@
 // Related Topics 栈 数组 双指针 动态规划 单调栈 👍 2934 👎 0
 
 package leetcode.editor.cn;
+
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Stack;
+
 public class TrappingRainWater {
     public static void main(String[] args) {
         Solution solution = new TrappingRainWater().new Solution();
@@ -44,28 +49,48 @@ public class TrappingRainWater {
 class Solution {
     public int trap(int[] height) {
         int n = height.length;
-        if (n == 0) return 0;
-        int[] l = new int[n];
-        int[] r = new int[n];
+        int sum = 0;
+        Deque<Integer> stack = new LinkedList<>();
         for (int i = 0; i < n; ++i) {
-            if (i == 0) {
-                l[i] = height[0];
-            } else {
-                l[i] = Math.max(l[i - 1], height[i]);
+            int cur = height[i];
+            while (!stack.isEmpty() && cur > height[stack.peek()]) {
+                int h = height[stack.peek()];
+                stack.pop();
+                if (stack.isEmpty()) {
+                    break;
+                }
+                // count the water
+                int dis = i - stack.peek() - 1;
+                int min = Math.min(height[stack.peek()], cur);
+                sum += dis * (min - h);
             }
+            stack.push(i);
         }
-        for (int i = n-1; i >= 0; --i) {
-            if (i == n-1) {
-                r[i] = height[n-1];
-            } else {
-                r[i] = Math.max(r[i+1], height[i]);
-            }
-        }
-        int ans = 0;
-        for (int j = 0; j < n; ++j) {
-            ans += Math.min(r[j], l[j]) - height[j];
-        }
-        return ans;
+        return sum;
+
+//        int n = height.length;
+//        if (n == 0) return 0;
+//        int[] l = new int[n];
+//        int[] r = new int[n];
+//        for (int i = 0; i < n; ++i) {
+//            if (i == 0) {
+//                l[i] = height[0];
+//            } else {
+//                l[i] = Math.max(l[i - 1], height[i]);
+//            }
+//        }
+//        for (int i = n-1; i >= 0; --i) {
+//            if (i == n-1) {
+//                r[i] = height[n-1];
+//            } else {
+//                r[i] = Math.max(r[i+1], height[i]);
+//            }
+//        }
+//        int ans = 0;
+//        for (int j = 0; j < n; ++j) {
+//            ans += Math.min(r[j], l[j]) - height[j];
+//        }
+//        return ans;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
