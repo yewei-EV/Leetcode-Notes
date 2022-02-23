@@ -55,6 +55,12 @@
 // Related Topics 栈 设计 数据流 单调栈 👍 162 👎 0
 
 package leetcode.editor.cn;
+
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
+
 public class OnlineStockSpan {
     public static void main(String[] args) {
         Solution solution = new OnlineStockSpan().new Solution();
@@ -63,12 +69,29 @@ public class OnlineStockSpan {
     //leetcode submit region begin(Prohibit modification and deletion)
 class StockSpanner {
 
-    public StockSpanner() {
+    private Deque<Integer> stack;
+    private List<Integer> numList;
 
+    public StockSpanner() {
+        stack = new LinkedList<>();
+        numList = new ArrayList<>();
     }
     
     public int next(int price) {
-
+        int res = 0;
+        numList.add(price);
+        while (!stack.isEmpty() && numList.get(stack.peek()) <= price) {
+            stack.pop();
+        }
+        if (stack.isEmpty()) {
+            res = numList.size();
+        } else {
+            // cur index - index of next greater element on the left-hand side
+            res = numList.size() - 1 - stack.peek();
+        }
+        // push the current element index into stack
+        stack.push(numList.size() - 1);
+        return res;
     }
 }
 
