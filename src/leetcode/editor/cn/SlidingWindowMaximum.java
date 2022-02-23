@@ -46,6 +46,8 @@
 
 package leetcode.editor.cn;
 
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.PriorityQueue;
 
 public class SlidingWindowMaximum {
@@ -57,22 +59,43 @@ public class SlidingWindowMaximum {
 class Solution {
     public int[] maxSlidingWindow(int[] nums, int k) {
         int n = nums.length;
-        PriorityQueue<int[]> queue = new PriorityQueue<>((p1, p2) ->
-                p1[0] != p2[0] ? p2[0] - p1[0] : p2[1] - p1[1]);
+        Deque<Integer> queue = new LinkedList<>();
         for (int i = 0; i < k; ++i) {
-            queue.offer(new int[]{nums[i], i});
-        }
-        int [] ans = new int[n - k + 1];
-        ans[0] = queue.peek()[0];
-        for (int i = k; i < n; ++i) {
-            queue.offer(new int[]{nums[i], i});
-            // find a max element whose index is in range
-            while (queue.peek()[1] + k <= i) {
-                queue.poll();
+            while (!queue.isEmpty() && nums[i] >= nums[queue.peekLast()]) {
+                queue.pollLast();
             }
-            ans[i - k + 1] = queue.peek()[0];
+            queue.offerLast(i);
+        }
+        int[] ans = new int[n - k + 1];
+        ans[0] = nums[queue.peekFirst()];
+        for (int i = k; i < n; i++) {
+            while (!queue.isEmpty() && nums[i] >= nums[queue.peekLast()]) {
+                queue.pollLast();
+            }
+            queue.offerLast(i);
+            while (queue.peekFirst() + k <= i) {
+                queue.pollFirst();
+            }
+            ans[i - k + 1] = nums[queue.peekFirst()];
         }
         return ans;
+//        int n = nums.length;
+//        PriorityQueue<int[]> queue = new PriorityQueue<>((p1, p2) ->
+//                p1[0] != p2[0] ? p2[0] - p1[0] : p2[1] - p1[1]);
+//        for (int i = 0; i < k; ++i) {
+//            queue.offer(new int[]{nums[i], i});
+//        }
+//        int [] ans = new int[n - k + 1];
+//        ans[0] = queue.peek()[0];
+//        for (int i = k; i < n; ++i) {
+//            queue.offer(new int[]{nums[i], i});
+//            // find a max element whose index is in range
+//            while (queue.peek()[1] + k <= i) {
+//                queue.poll();
+//            }
+//            ans[i - k + 1] = queue.peek()[0];
+//        }
+//        return ans;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
