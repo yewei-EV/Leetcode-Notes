@@ -58,6 +58,7 @@ public class ValidateBinaryTreeNodes {
 class Solution {
     public boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
         int[] inDegree = new int[n];
+        // check if every node only has at least one parent
         for (int i = 0; i < n; i++) {
             if (leftChild[i] != -1) {
                 inDegree[leftChild[i]]++;
