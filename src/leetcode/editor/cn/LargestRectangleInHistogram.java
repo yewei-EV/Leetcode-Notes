@@ -36,6 +36,8 @@
 package leetcode.editor.cn;
 
 import java.util.Arrays;
+import java.util.Deque;
+import java.util.LinkedList;
 
 public class LargestRectangleInHistogram {
     public static void main(String[] args) {
@@ -46,31 +48,52 @@ public class LargestRectangleInHistogram {
 class Solution {
     public int largestRectangleArea(int[] heights) {
         int n = heights.length;
-        int[] leftBoundary = new int[n];
-        int[] rightBoundary = new int[n];
-        rightBoundary[n - 1] = n;
-        leftBoundary[0] = -1;
-        for (int i = 1; i < n; ++i) {
-            int cur = i - 1;
-            while (cur >= 0 && heights[i] <= heights[cur]) {
-                cur = leftBoundary[cur];
-            }
-            leftBoundary[i] = cur;
-        }
-        for (int i = n - 2; i >= 0; --i) {
-            int cur = i + 1;
-            while (cur < n && heights[i] <= heights[cur]) {
-                cur = rightBoundary[cur];
-            }
-            rightBoundary[i] = cur;
-        }
-
-        int max = 0;
+        Deque<Integer> monoStack = new LinkedList<>();
+        int[] leftLess = new int[n];
+        int[] rightLess = new int[n];
+        Arrays.fill(rightLess, n);
         for (int i = 0; i < n; ++i) {
-            max = Math.max(max,
-                    (rightBoundary[i] - leftBoundary[i] - 1) * heights[i]);
+            int cur = heights[i];
+            while (!monoStack.isEmpty() && heights[monoStack.peek()] >= cur) {
+                rightLess[monoStack.peek()] = i;
+                monoStack.pop();
+            }
+            leftLess[i] = monoStack.isEmpty() ? -1 : monoStack.peek();
+            monoStack.push(i);
         }
-        return max;
+        int ans = 0;
+        for (int i = 0; i < n; ++i) {
+            ans = Math.max(ans, (rightLess[i] - leftLess[i] - 1) * heights[i]);
+        }
+        return ans;
+
+//        int n = heights.length;
+//        Deque<Integer> leftLessStack = new LinkedList<>();
+//        Deque<Integer> rightLessStack = new LinkedList<>();
+//        int[] leftLess = new int[n];
+//        int[] rightLess = new int[n];
+//        for (int i = 0; i < n; ++i) {
+//            int cur = heights[i];
+//            while (!leftLessStack.isEmpty() && heights[leftLessStack.peek()] >= cur) {
+//                leftLessStack.pop();
+//            }
+//            leftLess[i] = leftLessStack.isEmpty() ? -1 : leftLessStack.peek();
+//            leftLessStack.push(i);
+//        }
+//
+//        for (int i = n - 1; i >= 0; --i) {
+//            int cur = heights[i];
+//            while (!rightLessStack.isEmpty() && heights[rightLessStack.peek()] >= cur) {
+//                rightLessStack.pop();
+//            }
+//            rightLess[i] = rightLessStack.isEmpty() ? n : rightLessStack.peek();
+//            rightLessStack.push(i);
+//        }
+//        int ans = 0;
+//        for (int i = 0; i < n; ++i) {
+//            ans = Math.max(ans, (rightLess[i] - leftLess[i] - 1) * heights[i]);
+//        }
+//        return ans;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
