@@ -42,9 +42,9 @@ public class ThreeSum {
     //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
     public List<List<Integer>> threeSum(int[] nums) {
-        List<List<Integer>> ans = new ArrayList();
+        List<List<Integer>> ans = new ArrayList<>();
         int len = nums.length;
-        if(nums == null || len < 3) return ans;
+        if(len < 3) return ans;
         Arrays.sort(nums);
         for (int i = 0; i < len ; i++) {
             if(nums[i] > 0) break;
@@ -60,8 +60,14 @@ class Solution {
                     L++;
                     R--;
                 }
-                else if (sum < 0) L++;
-                else R--;
+                else if (sum < 0) {
+                    while (L<R && nums[L] == nums[L+1]) L++;
+                    L++;
+                }
+                else {
+                    while (L<R && nums[R] == nums[R-1]) R--;
+                    R--;
+                }
             }
         }
         return ans;
