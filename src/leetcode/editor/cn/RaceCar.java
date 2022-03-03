@@ -60,10 +60,7 @@
 
 package leetcode.editor.cn;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 
 public class RaceCar {
     public static void main(String[] args) {
@@ -74,62 +71,62 @@ public class RaceCar {
 class Solution {
     public int racecar(int target) {
         //DP
-        if (target <= 0) {
-            return 0;
-        }
-        int[] dp = new int[target + 1];
-        Arrays.fill(dp, Integer.MAX_VALUE);
-        for (int i = 1; i <= target; ++i) {
-            // distance can not be as far as 2*target
-            for (int forward = 1; (1 << forward) - 1 < 2 * i; ++forward) {
-                int forwardDistance = (1 << forward) - 1;
-                if (forwardDistance == i) {
-                    //direct reach
-                    dp[i] = forward;
-                } else if (forwardDistance > i) {
-                    //pass and go back
-                    dp[i] = Math.min(forward + dp[forwardDistance - i] + 1, dp[i]);
-                } else {
-                    //forward, go back and forward again
-                    for (int backward = 0; backward < forward; ++backward) {
-                        int backwardDistance = (1 << backward) - 1;
-                        dp[i] = Math.min(forward + 1 + backward + 1 + dp[i - forwardDistance + backwardDistance], dp[i]);
-                    }
-                }
-            }
-        }
-        return dp[target];
-        //BFS
-//        if (target == 0) return 0;
-//        LinkedList<int[]> queue = new LinkedList<>();
-//        Set<String> visited = new HashSet<>();
-//        int[] start = new int[]{0, 1};
-//        queue.addLast(start);
-//        visited.add(Arrays.toString(start));
-//        int ans = -1;
-//        while (!queue.isEmpty()) {
-//            ans++;
-//            int size = queue.size();
-//            while (size-- > 0) {
-//                int[] cur = queue.removeFirst();
-//                if (cur[0] == target) return ans;
-//                // 加速
-//                int[] next1 = new int[]{cur[0] + cur[1], cur[1] * 2};
-//                String state1 = Arrays.toString(next1);
-//                if (next1[0] >= 0 && !visited.contains(state1)) {
-//                    queue.addLast(next1);
-//                    visited.add(state1);
-//                }
-//                // 倒车
-//                int[] next2 = new int[]{cur[0], cur[1] > 0 ? -1 : 1};
-//                String state2 = Arrays.toString(next2);
-//                if (next2[0] >= 0 && !visited.contains(state2)) {
-//                    queue.addLast(next2);
-//                    visited.add(state2);
+//        if (target <= 0) {
+//            return 0;
+//        }
+//        int[] dp = new int[target + 1];
+//        Arrays.fill(dp, Integer.MAX_VALUE);
+//        for (int i = 1; i <= target; ++i) {
+//            // distance can not be as far as 2*target
+//            for (int forward = 1; (1 << forward) - 1 < 2 * i; ++forward) {
+//                int forwardDistance = (1 << forward) - 1;
+//                if (forwardDistance == i) {
+//                    //direct reach
+//                    dp[i] = forward;
+//                } else if (forwardDistance > i) {
+//                    //pass and go back
+//                    dp[i] = Math.min(forward + dp[forwardDistance - i] + 1, dp[i]);
+//                } else {
+//                    //forward, go back and forward again
+//                    for (int backward = 0; backward < forward; ++backward) {
+//                        int backwardDistance = (1 << backward) - 1;
+//                        dp[i] = Math.min(forward + 1 + backward + 1 + dp[i - forwardDistance + backwardDistance], dp[i]);
+//                    }
 //                }
 //            }
 //        }
-//        return -1;
+//        return dp[target];
+        //BFS
+        if (target == 0) return 0;
+        Queue<int[]> queue = new LinkedList<>();
+        Set<String> visited = new HashSet<>();
+        int[] start = new int[]{0, 1};
+        queue.offer(start);
+        visited.add(Arrays.toString(start));
+        int ans = 0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while (size-- > 0) {
+                int[] cur = queue.poll();
+                if (cur[0] == target) return ans;
+                // 加速
+                int[] next1 = new int[]{cur[0] + cur[1], cur[1] * 2};
+                String state1 = Arrays.toString(next1);
+                if (!visited.contains(state1)) {
+                    queue.offer(next1);
+                    visited.add(state1);
+                }
+                // 倒车
+                int[] next2 = new int[]{cur[0], cur[1] > 0 ? -1 : 1};
+                String state2 = Arrays.toString(next2);
+                if (next2[0] >= 0 && !visited.contains(state2)) {
+                    queue.offer(next2);
+                    visited.add(state2);
+                }
+            }
+            ans++;
+        }
+        return -1;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
