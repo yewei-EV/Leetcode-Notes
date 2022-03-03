@@ -50,6 +50,7 @@ class Solution {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
             char cur = s.charAt(i);
+            num[cur - 'a'] -= 1;
             if (!visited[cur - 'a']) {
                 while (sb.length() > 0 && sb.charAt(sb.length() - 1) > cur) {
                     // check if there is more cur
@@ -63,7 +64,6 @@ class Solution {
                 sb.append(cur);
                 visited[cur - 'a'] = true;
             }
-            num[cur - 'a'] -= 1;
         }
         return sb.toString();
     }
