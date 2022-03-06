@@ -90,6 +90,7 @@ class Solution {
         }
         if (memo[cur][fuel] != -1L) return memo[cur][fuel];
         long count = 0;
+        // do not stop here, only stop when fuel is not enough
         if (cur == finish) {
             count = 1;
         }
