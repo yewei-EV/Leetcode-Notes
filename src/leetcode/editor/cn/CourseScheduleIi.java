@@ -61,9 +61,7 @@
 
 package leetcode.editor.cn;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class CourseScheduleIi {
     public static void main(String[] args) {
@@ -79,38 +77,74 @@ class Solution {
         for (int i = 0; i < numCourses; i++) {
             graph.add(new ArrayList<>());
         }
-        int[] visited = new int[numCourses];
+        int[] inDegrees = new int[numCourses];
         for (int[] neighbor : prerequisites) {
             graph.get(neighbor[1]).add(neighbor[0]);
+            inDegrees[neighbor[0]]++;
         }
-        for(int i = 0; i < numCourses; ++i) {
-            if(!dfs(graph, visited, i, res)) {
-                return new int[0];
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < inDegrees.length; i++) {
+            if (inDegrees[i] == 0) {
+                queue.offer(i);
             }
         }
+        while (!queue.isEmpty()) {
+            int cur = queue.poll();
+            res.add(cur);
+            numCourses--;
+            for (int neighbor : graph.get(cur)) {
+                inDegrees[neighbor]--;
+                if (inDegrees[neighbor] == 0) {
+                    queue.offer(neighbor);
+                }
+            }
+        }
+        if (numCourses != 0) return new int[0];
         int[] ans = new int[res.size()];
         for (int i = 0; i < res.size(); i++) {
-            ans[res.size()-1-i] = res.get(i);
+            ans[i] = res.get(i);
         }
         return ans;
     }
 
-//    i == 0 ： 干净的，未被 DFS 访问
-//    i == -1：其他节点启动的 DFS 访问过了，路径没问题，不需要再访问了
-//    i == 1  ：本节点启动的 DFS 访问过了，一旦遇到了也说明有环了
-    public boolean dfs(List<List<Integer>> graph, int[] visited, int i, ArrayList<Integer> result) {
-        if (visited[i] == 1) return false;
-        if (visited[i] == -1) return true;
-        visited[i] = 1;
-        for (int next : graph.get(i)) {
-            if (!dfs(graph, visited, next, result)) {
-                return false;
-            }
-        }
-        visited[i] = -1;
-        result.add(i);
-        return true;
-    }
+//    public int[] findOrder(int numCourses, int[][] prerequisites) {
+//        ArrayList<Integer> res = new ArrayList<>();
+//        List<List<Integer>> graph = new ArrayList<>();
+//        for (int i = 0; i < numCourses; i++) {
+//            graph.add(new ArrayList<>());
+//        }
+//        int[] visited = new int[numCourses];
+//        for (int[] neighbor : prerequisites) {
+//            graph.get(neighbor[1]).add(neighbor[0]);
+//        }
+//        for(int i = 0; i < numCourses; ++i) {
+//            if(!dfs(graph, visited, i, res)) {
+//                return new int[0];
+//            }
+//        }
+//        int[] ans = new int[res.size()];
+//        for (int i = 0; i < res.size(); i++) {
+//            ans[res.size()-1-i] = res.get(i);
+//        }
+//        return ans;
+//    }
+//
+////    i == 0 ： 干净的，未被 DFS 访问
+////    i == -1：其他节点启动的 DFS 访问过了，路径没问题，不需要再访问了
+////    i == 1  ：本节点启动的 DFS 访问过了，一旦遇到了也说明有环了
+//    public boolean dfs(List<List<Integer>> graph, int[] visited, int i, ArrayList<Integer> result) {
+//        if (visited[i] == 1) return false;
+//        if (visited[i] == -1) return true;
+//        visited[i] = 1;
+//        for (int next : graph.get(i)) {
+//            if (!dfs(graph, visited, next, result)) {
+//                return false;
+//            }
+//        }
+//        visited[i] = -1;
+//        result.add(i);
+//        return true;
+//    }
 }
 //leetcode submit region end(Prohibit modification and deletion)
 
