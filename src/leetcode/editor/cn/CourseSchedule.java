@@ -50,7 +50,9 @@
 package leetcode.editor.cn;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class CourseSchedule {
     public static void main(String[] args) {
@@ -64,33 +66,58 @@ class Solution {
         for (int i = 0; i < numCourses; i++) {
             graph.add(new ArrayList<>());
         }
-        int[] visited = new int[numCourses];
+        int[] inDegrees = new int[numCourses];
+        Queue<Integer> queue = new LinkedList<>();
         for (int[] neighbor : prerequisites) {
             graph.get(neighbor[1]).add(neighbor[0]);
+            inDegrees[neighbor[0]]++;
         }
-        for(int i = 0; i < numCourses; ++i) {
-            if(!dfs(graph, visited, i)) {
-                return false;
+        for(int i = 0; i < numCourses; i++)
+            if(inDegrees[i] == 0) queue.add(i);
+
+        while (!queue.isEmpty()) {
+            int cur = queue.poll();
+            numCourses--;
+            for (int next : graph.get(cur)) {
+                inDegrees[next]--;
+                if (inDegrees[next] == 0) queue.add(next);
             }
         }
-        return true;
+        return numCourses == 0;
     }
+
+//    public boolean canFinish(int numCourses, int[][] prerequisites) {
+//        List<List<Integer>> graph = new ArrayList<>();
+//        for (int i = 0; i < numCourses; i++) {
+//            graph.add(new ArrayList<>());
+//        }
+//        int[] visited = new int[numCourses];
+//        for (int[] neighbor : prerequisites) {
+//            graph.get(neighbor[1]).add(neighbor[0]);
+//        }
+//        for(int i = 0; i < numCourses; ++i) {
+//            if(!dfs(graph, visited, i)) {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
 
 //    i == 0 ： 干净的，未被 DFS 访问
 //    i == -1：其他节点启动的 DFS 访问过了，路径没问题，不需要再访问了
 //    i == 1  ：本节点启动的 DFS 访问过了，一旦遇到了也说明有环了
-    public boolean dfs(List<List<Integer>> graph, int[] visited, int i) {
-        if (visited[i] == 1) return false;
-        if (visited[i] == -1) return true;
-        visited[i] = 1;
-        for (int next : graph.get(i)) {
-            if(!dfs(graph, visited, next)) {
-                return false;
-            }
-        }
-        visited[i] = -1;
-        return true;
-    }
+//    public boolean dfs(List<List<Integer>> graph, int[] visited, int i) {
+//        if (visited[i] == 1) return false;
+//        if (visited[i] == -1) return true;
+//        visited[i] = 1;
+//        for (int next : graph.get(i)) {
+//            if(!dfs(graph, visited, next)) {
+//                return false;
+//            }
+//        }
+//        visited[i] = -1;
+//        return true;
+//    }
 }
 //leetcode submit region end(Prohibit modification and deletion)
 
