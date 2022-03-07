@@ -49,10 +49,7 @@
 
 package leetcode.editor.cn;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class WordBreak {
     public static void main(String[] args) {
@@ -62,7 +59,10 @@ public class WordBreak {
     //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
     public boolean wordBreak(String s, List<String> wordDict) {
-
+//        Set<String> set = new HashSet<>(wordDict);
+//        Map<Integer, Boolean> memo = new HashMap<>();
+//        return helper(set, s, 0, memo);
+        //DP
         int m = s.length();
         boolean[] dp = new boolean[m + 1];
         dp[0] = true;
@@ -72,11 +72,26 @@ class Solution {
                         && word.equals(s.substring(i - word.length(), i))
                         && dp[i - word.length()]) {
                     dp[i] = true;
+                    break;
                 }
             }
         }
         return dp[m];
     }
+
+//    public boolean helper(Set<String> set, String s, int index, Map<Integer, Boolean> memo) {
+//        if (index >= s.length()) return true;
+//        if (memo.containsKey(index)) return memo.get(index);
+//        for (int i = index + 1; i <= s.length(); i++) {
+//            String word = s.substring(index, i);
+//            if (set.contains(word) && helper(set, s, i, memo)) {
+//                memo.put(index, true);
+//                return true;
+//            }
+//        }
+//        memo.put(index, false);
+//        return false;
+//    }
 }
 //leetcode submit region end(Prohibit modification and deletion)
 
