@@ -38,6 +38,7 @@ package leetcode.editor.cn;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.Stack;
 
 public class LargestRectangleInHistogram {
     public static void main(String[] args) {
@@ -48,52 +49,33 @@ public class LargestRectangleInHistogram {
 class Solution {
     public int largestRectangleArea(int[] heights) {
         int n = heights.length;
-        Deque<Integer> monoStack = new LinkedList<>();
+        if (heights.length == 0) {
+            return 0;
+        }
+        // monotonic stack in ascending order
+        Deque<Integer> stack = new LinkedList<>();
         int[] leftLess = new int[n];
+        Arrays.fill(leftLess, -1);
         int[] rightLess = new int[n];
         Arrays.fill(rightLess, n);
-        for (int i = 0; i < n; ++i) {
+        for (int i = 0; i < n; i++) {
             int cur = heights[i];
-            while (!monoStack.isEmpty() && heights[monoStack.peek()] >= cur) {
-                rightLess[monoStack.peek()] = i;
-                monoStack.pop();
+            // pop out if new element is less and EQUAL to peek element
+            // since we are going to find the first SMALLER element
+            // NOTICE we are using index in stack
+            while (!stack.isEmpty() && heights[stack.peek()] >= cur) {
+                rightLess[stack.peek()] = i;
+                stack.pop();
             }
-            leftLess[i] = monoStack.isEmpty() ? -1 : monoStack.peek();
-            monoStack.push(i);
+            // do not forget to consider null stack
+            leftLess[i] = stack.isEmpty() ? -1 : stack.peek();
+            stack.push(i);
         }
-        int ans = 0;
-        for (int i = 0; i < n; ++i) {
-            ans = Math.max(ans, (rightLess[i] - leftLess[i] - 1) * heights[i]);
+        int max = Integer.MIN_VALUE;
+        for (int j = 0; j < n; j++) {
+            max = Math.max(max, (rightLess[j] - leftLess[j] - 1) * heights[j]);
         }
-        return ans;
-
-//        int n = heights.length;
-//        Deque<Integer> leftLessStack = new LinkedList<>();
-//        Deque<Integer> rightLessStack = new LinkedList<>();
-//        int[] leftLess = new int[n];
-//        int[] rightLess = new int[n];
-//        for (int i = 0; i < n; ++i) {
-//            int cur = heights[i];
-//            while (!leftLessStack.isEmpty() && heights[leftLessStack.peek()] >= cur) {
-//                leftLessStack.pop();
-//            }
-//            leftLess[i] = leftLessStack.isEmpty() ? -1 : leftLessStack.peek();
-//            leftLessStack.push(i);
-//        }
-//
-//        for (int i = n - 1; i >= 0; --i) {
-//            int cur = heights[i];
-//            while (!rightLessStack.isEmpty() && heights[rightLessStack.peek()] >= cur) {
-//                rightLessStack.pop();
-//            }
-//            rightLess[i] = rightLessStack.isEmpty() ? n : rightLessStack.peek();
-//            rightLessStack.push(i);
-//        }
-//        int ans = 0;
-//        for (int i = 0; i < n; ++i) {
-//            ans = Math.max(ans, (rightLess[i] - leftLess[i] - 1) * heights[i]);
-//        }
-//        return ans;
+        return max;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
