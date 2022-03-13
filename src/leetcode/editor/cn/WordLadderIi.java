@@ -78,7 +78,6 @@ class Solution {
 
         while (!queue.isEmpty()) {
             int size = queue.size();
-//            System.out.println(queue);
             while (size-- > 0) {
                 List<String> cur = queue.poll();
                 String lastWord = cur.get(cur.size() - 1);
@@ -95,10 +94,10 @@ class Solution {
                     }
                 }
             }
+            if (ans.size() > 0) break;
             for (List<String> strings : queue) {
                 visited.add(strings.get(strings.size() - 1));
             }
-            if (ans.size() > 0) break;
         }
         return ans;
     }
