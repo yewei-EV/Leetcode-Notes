@@ -68,70 +68,71 @@ public class WordLadder {
     //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
     public int ladderLength(String beginWord, String endWord, List<String> wordList) {
-        if (wordList == null || wordList.size() == 0) return 0;
-        HashSet<String> startQueue = new HashSet<>();
-        HashSet<String> endQueue = new HashSet<>();
-        HashSet<String> wordDict = new HashSet<>(wordList);
+//        if (wordList == null || wordList.size() == 0) return 0;
+//        HashSet<String> startQueue = new HashSet<>();
+//        HashSet<String> endQueue = new HashSet<>();
+//        HashSet<String> wordDict = new HashSet<>(wordList);
+//        int length = 1;
+//        startQueue.add(beginWord);
+//        endQueue.add(endWord);
+//        if (!wordDict.contains(endWord)) return 0;
+//        while (startQueue.size() != 0) {
+//            length++;
+//            wordDict.removeAll(startQueue);
+//            HashSet<String> tmpSet = new HashSet<>();
+//            for (String s: startQueue) {
+//                char[] arr = s.toCharArray();
+//                for(int i = 0; i < arr.length; i++){
+//                    char tmp = arr[i];
+//                    for(char c = 'a'; c <= 'z'; c++){
+//                        if(tmp == c) continue;
+//                        arr[i] = c;
+//                        String strTmp = new String(arr);
+//                        if (wordDict.contains(strTmp)){
+//                            if (endQueue.contains(strTmp)){
+//                                return length;
+//                            } else {
+//                                tmpSet.add(strTmp);
+//                            }
+//                        }
+//                    }
+//                    arr[i] = tmp;
+//                }
+//            }
+//            if (tmpSet.size() < endQueue.size()) {
+//                startQueue = tmpSet;
+//            } else {
+//                startQueue = endQueue;
+//                endQueue = tmpSet;
+//            }
+//        }
+//        return 0;
+//    }
+
+        //Normal BFS
+        Queue<String> queue = new LinkedList<>();
+        queue.add(beginWord);
+        boolean[] marked = new boolean[wordList.size()];
         int length = 1;
-        startQueue.add(beginWord);
-        endQueue.add(endWord);
-        if (!wordDict.contains(endWord)) return 0;
-        while (startQueue.size() != 0) {
+        while (queue.size() != 0) {
             length++;
-            wordDict.removeAll(startQueue);
-            HashSet<String> tmpSet = new HashSet<>();
-            for (String s: startQueue) {
-                char[] arr = s.toCharArray();
-                for(int i = 0; i < arr.length; i++){
-                    char tmp = arr[i];
-                    for(char c = 'a'; c <= 'z'; c++){
-                        if(tmp == c) continue;
-                        arr[i] = c;
-                        String strTmp = new String(arr);
-                        if (wordDict.contains(strTmp)){
-                            if (endQueue.contains(strTmp)){
-                                return length;
-                            } else {
-                                tmpSet.add(strTmp);
-                            }
+            int size = queue.size();
+            while (size-- > 0) {
+                String cur = queue.poll();
+                for (int j = 0; j < wordList.size(); j++) {
+                    if (!marked[j] && isValid(cur, wordList.get(j))) {
+                        if (wordList.get(j).equals(endWord)) {
+                            return length;
                         }
+                        queue.add(wordList.get(j));
+                        marked[j] = true;
                     }
-                    arr[i] = tmp;
                 }
-            }
-            if (tmpSet.size() < endQueue.size()) {
-                startQueue = tmpSet;
-            } else {
-                startQueue = endQueue;
-                endQueue = tmpSet;
             }
         }
         return 0;
     }
 
-        //Normal BFS
-//        Queue<String> queue = new LinkedList<>();
-//        queue.add(beginWord);
-//        boolean[] marked = new boolean[wordList.size() + 1];
-//        int length = 1;
-//        while (queue.size() != 0) {
-//            length++;
-//            int size = queue.size();
-//            while (size-- > 0) {
-//                String cur = queue.poll();
-//                for (int j = 0; j < wordList.size(); j++) {
-//                    if (!marked[j] && isValid(cur, wordList.get(j))) {
-//                        if (wordList.get(j).equals(endWord)) {
-//                            return length;
-//                        }
-//                        queue.add(wordList.get(j));
-//                        marked[j] = true;
-//                    }
-//                }
-//            }
-//        }
-//        return 0;
-//    }
     public boolean isValid(String target, String word) {
         int count = 0;
         for (int i = 0; i < target.length(); ++i) {
