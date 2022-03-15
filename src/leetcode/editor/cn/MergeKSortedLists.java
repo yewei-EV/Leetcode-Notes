@@ -52,6 +52,11 @@
 // Related Topics 链表 分治 堆（优先队列） 归并排序 👍 1670 👎 0
 
 package leetcode.editor.cn;
+
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+
 public class MergeKSortedLists {
     public static void main(String[] args) {
         Solution solution = new MergeKSortedLists().new Solution();
@@ -67,53 +72,46 @@ public class MergeKSortedLists {
 //    }
 class Solution {
     public ListNode mergeKLists(ListNode[] lists) {
-        if (lists.length == 0) return null;
-        return merge(lists, 0, lists.length - 1);
-    }
-
-    public ListNode merge(ListNode[] lists, int l, int r) {
-        if (l == r) return lists[l];
-        int mid = (l+r) >> 1;
-        ListNode l1 = merge(lists, l, mid);
-        ListNode l2 = merge(lists, mid+1, r);
-        return mergeTwoLists(l1, l2);
-    }
-
-    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
-        if (list1 == null) return list2;
-        if (list2 == null) return list1;
-        if (list1.val < list2.val) {
-            list1.next = mergeTwoLists(list1.next, list2);
-            return list1;
-        } else {
-            list2.next = mergeTwoLists(list1, list2.next);
-            return list2;
+        int n = lists.length;
+        if (lists == null || n == 0) return null;
+        PriorityQueue<ListNode> q = new PriorityQueue<>(n, (a, b)-> a.val - b.val);
+        ListNode dummy = new ListNode(0);
+        ListNode p = dummy;
+        for (ListNode node : lists) {
+            if (node != null) q.offer(node);
         }
+        while (!q.isEmpty()) {
+            ListNode cur = q.poll();
+            p.next = cur;
+            p = p.next;
+            if (cur.next != null) {
+                q.offer(cur.next);
+            }
+        }
+        return dummy.next;
     }
+//        if (lists.length == 0) return null;
+//        return merge(lists, 0, lists.length - 1);
+//    }
 
-//    public ListNode mergeKLists(ListNode[] lists) {
-//        ListNode ans = null;
-//        for (int i = 0; i < lists.length; ++i) {
-//            ans = mergeTwoLists(ans, lists[i]);
-//        }
-//        return ans;
+//    public ListNode merge(ListNode[] lists, int l, int r) {
+//        if (l == r) return lists[l];
+//        int mid = (l+r) >> 1;
+//        ListNode l1 = merge(lists, l, mid);
+//        ListNode l2 = merge(lists, mid+1, r);
+//        return mergeTwoLists(l1, l2);
 //    }
 //
 //    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
-//        ListNode dummyHead = new ListNode(0);
-//        ListNode cur = dummyHead;
-//        while (list1 != null && list2 != null) {
-//            if (list1.val < list2.val) {
-//                cur.next = list1;
-//                list1 = list1.next;
-//            } else {
-//                cur.next = list2;
-//                list2 = list2.next;
-//            }
-//            cur = cur.next;
+//        if (list1 == null) return list2;
+//        if (list2 == null) return list1;
+//        if (list1.val < list2.val) {
+//            list1.next = mergeTwoLists(list1.next, list2);
+//            return list1;
+//        } else {
+//            list2.next = mergeTwoLists(list1, list2.next);
+//            return list2;
 //        }
-//        cur.next = list1 == null ? list2 : list1;
-//        return dummyHead.next;
 //    }
 }
 //leetcode submit region end(Prohibit modification and deletion)
