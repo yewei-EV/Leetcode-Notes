@@ -46,30 +46,59 @@ public class MinimumFallingPathSum {
     }
     //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
+
+    int[][] memo;
+
     public int minFallingPathSum(int[][] matrix) {
-        int m = matrix.length;
-        int n = matrix[0].length;
-        int[][] dp = new int[m][n];
-        for(int i = 0; i < n; i++){
-            dp[0][i] = matrix[0][i];
+        int min = Integer.MAX_VALUE;
+        memo = new int[matrix.length][matrix.length];
+        for (int i = 0; i < matrix.length; i++) {
+            min = Math.min(min, findMinPath(matrix, 0, i));
         }
-        for (int i = 1; i < m; ++i) {
-            for (int j = 0; j < n; ++j) {
-                if (j + 1 >= n) {
-                    dp[i][j] = matrix[i][j] + Math.min(dp[i-1][j-1], dp[i-1][j]);
-                } else if (j - 1 < 0) {
-                    dp[i][j] = matrix[i][j] + Math.min(dp[i-1][j],dp[i-1][j+1]);
-                } else {
-                    dp[i][j] = matrix[i][j] + Math.min(dp[i-1][j-1], Math.min(dp[i-1][j],dp[i-1][j+1]));
-                }
-            }
-        }
-        int res = Integer.MAX_VALUE;
-        for (int i = 0; i < m; i++) {
-            res = Math.min(dp[m-1][i], res);
-        }
-        return res;
+        return min;
     }
+
+    private int findMinPath(int[][] matrix, int row, int col) {
+        if (row == matrix.length - 1) {
+            return matrix[row][col];
+        }
+        int min = Integer.MAX_VALUE;
+        if (memo[row][col] != 0) {
+            return memo[row][col];
+        }
+        if (col - 1 >= 0) {
+            min = Math.min(min, findMinPath(matrix, row + 1, col - 1) + matrix[row][col]);
+        }
+        if (col + 1 < matrix.length) {
+            min = Math.min(min, findMinPath(matrix, row + 1, col + 1) + matrix[row][col]);
+        }
+        min = Math.min(min, findMinPath(matrix, row + 1, col) + matrix[row][col]);
+        memo[row][col] = min;
+        return min;
+    }
+//        int m = matrix.length;
+//        int n = matrix[0].length;
+//        int[][] dp = new int[m][n];
+//        for(int i = 0; i < n; i++){
+//            dp[0][i] = matrix[0][i];
+//        }
+//        for (int i = 1; i < m; ++i) {
+//            for (int j = 0; j < n; ++j) {
+//                if (j + 1 >= n) {
+//                    dp[i][j] = matrix[i][j] + Math.min(dp[i-1][j-1], dp[i-1][j]);
+//                } else if (j - 1 < 0) {
+//                    dp[i][j] = matrix[i][j] + Math.min(dp[i-1][j],dp[i-1][j+1]);
+//                } else {
+//                    dp[i][j] = matrix[i][j] + Math.min(dp[i-1][j-1], Math.min(dp[i-1][j],dp[i-1][j+1]));
+//                }
+//            }
+//        }
+//        int res = Integer.MAX_VALUE;
+//        for (int i = 0; i < m; i++) {
+//            res = Math.min(dp[m-1][i], res);
+//        }
+//        return res;
+//    }
 }
 //leetcode submit region end(Prohibit modification and deletion)
 
