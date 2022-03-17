@@ -52,28 +52,83 @@ public class NumberOfProvinces {
     }
     //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
-    public int findCircleNum(int[][] isConnected) {
-        int count = 0;
-        int m = isConnected.length;
-        boolean[] visited = new boolean[m];
-        for (int i = 0; i < m; ++i) {
-            if (!visited[i]) {
-                count++;
-                dfs(isConnected, i, visited);
+
+    class UnionFind {
+
+        private int[] rank;
+        private int[] parent;
+        // count how many sets we have
+        private int count;
+
+        public UnionFind(int size) {
+            count = size;
+            parent = new int[size];
+            rank = new int[size];
+            for (int i = 0; i < size; i++) {
+                parent[i] = i;
             }
         }
-        return count;
+
+        public int find(int p) {
+            while (parent[p] != p) {
+                parent[p] = parent[parent[p]]; // path compression
+                p = parent[p];
+            }
+            return p;
+        }
+
+        public void union(int a, int b) {
+            int rootA = find(a);
+            int rootB = find(b);
+            if (rootA == rootB) return;
+            if (rank[rootA] > rank[rootB]) {
+                parent[rootB] = rootA;
+            } else {
+                if (rank[rootA] == rank[rootB]) {
+                    rank[rootB]++;
+                }
+                parent[rootA] = rootB;
+            }
+            count--;
+        }
+
+        public int getCount() {
+            return count;
+        }
+
     }
 
-    public void dfs(int[][] isConnected, int i, boolean[] visited) {
-        if (visited[i]) return;
-        visited[i] = true;
-        for (int j = 0; j < isConnected.length; ++j) {
-            if (isConnected[i][j] == 1) {
-                dfs(isConnected, j, visited);
+    public int findCircleNum(int[][] isConnected) {
+        int n = isConnected.length;
+        UnionFind uf = new UnionFind(n);
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                if (isConnected[i][j] == 1) uf.union(i, j);
             }
         }
+        return uf.getCount();
     }
+//        int count = 0;
+//        int m = isConnected.length;
+//        boolean[] visited = new boolean[m];
+//        for (int i = 0; i < m; ++i) {
+//            if (!visited[i]) {
+//                count++;
+//                dfs(isConnected, i, visited);
+//            }
+//        }
+//        return count;
+//    }
+//
+//    public void dfs(int[][] isConnected, int i, boolean[] visited) {
+//        if (visited[i]) return;
+//        visited[i] = true;
+//        for (int j = 0; j < isConnected.length; ++j) {
+//            if (isConnected[i][j] == 1) {
+//                dfs(isConnected, j, visited);
+//            }
+//        }
+//    }
 }
 //leetcode submit region end(Prohibit modification and deletion)
 
