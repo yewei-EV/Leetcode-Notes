@@ -70,11 +70,14 @@ class Solution {
         }
 
         public int find(int p) {
-            while (parent[p] != p) {
-                parent[p] = parent[parent[p]]; // path compression
-                p = parent[p];
+            // recursive
+            int pt = parent[p];
+            // found the root
+            if (pt == p) {
+                return pt;
             }
-            return p;
+            parent[p] = find(parent[p]);
+            return parent[p];
         }
 
         public void union(int a, int b) {
