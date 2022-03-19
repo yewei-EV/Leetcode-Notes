@@ -48,15 +48,15 @@ class Solution {
     public int search(int[] nums, int target) {
         int n = nums.length;
         int l = 0;
-        int r = n - 1;
-        while (l <= r) {
-            int m = l + (r-l)/2;
-            if (nums[m] == target) {
-                return m;
-            } else if (nums[m] > target) {
-                r = m - 1;
-            } else if (nums[m] < target) {
-                l = m + 1;
+        int r = n;
+        while (l < r) {
+            int mid = l + (r-l)/2;
+            if (nums[mid] == target) {
+                return mid;
+            } else if (nums[mid] > target) {
+                r = mid;
+            } else if (nums[mid] < target) {
+               l = mid + 1;
             }
         }
         return -1;
