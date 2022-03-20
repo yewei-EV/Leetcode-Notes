@@ -50,21 +50,52 @@ class Solution {
         if (matrix.length < 1) return false;
         int m = matrix.length;
         int n = matrix[0].length;
-        int right = m * n  - 1;
         int left = 0;
-        while (left <= right) {
-            int mid = (left + right) / 2;
-            int i = mid / n;
-            int j = mid % n;
-            if (matrix[i][j] == target) {
+        int right = m;
+        while(left < right) {
+            int mid = left + (right - left) / 2;
+            if (matrix[mid][0] == target) {
                 return true;
-            } else if (matrix[i][j] > target) {
-                right = mid - 1;
-            } else {
+            } else if (matrix[mid][0] < target) {
                 left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        int row = left - 1;
+        if (row < 0) return false;
+        int l = 0;
+        int r = n;
+        while(l < r) {
+            int mid = l + (r - l) / 2;
+            if (matrix[row][mid] == target) {
+                return true;
+            } else if (matrix[row][mid] < target) {
+                l = mid + 1;
+            } else {
+                r = mid;
             }
         }
         return false;
+
+//        if (matrix.length < 1) return false;
+//        int m = matrix.length;
+//        int n = matrix[0].length;
+//        int right = m * n;
+//        int left = 0;
+//        while (left < right) {
+//            int mid = (left + right) / 2;
+//            int i = mid / n;
+//            int j = mid % n;
+//            if (matrix[i][j] == target) {
+//                return true;
+//            } else if (matrix[i][j] > target) {
+//                right = mid;
+//            } else {
+//                left = mid + 1;
+//            }
+//        }
+//        return false;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
