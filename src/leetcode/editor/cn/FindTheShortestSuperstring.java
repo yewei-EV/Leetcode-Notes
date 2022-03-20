@@ -51,102 +51,104 @@ public class FindTheShortestSuperstring {
     }
     //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
-//    int mn = Integer.MAX_VALUE;
-//    int[][] overlaps;
-//    List<Integer> bestOrder;
-//    public String shortestSuperstring(String[] words) {
-//        int n = words.length;
-//        //count the overlaps between word i followed by word j
-//        overlaps = new int[n][n];
-//        for (int i = 0; i < n; i++) {
-//            for (int j = 0; j < n; j++) {
-//                if (i == j) continue;
-//                for (int k = Math.min(words[i].length(), words[j].length()); k > 0; k--) {
-//                    if (words[i].substring(words[i].length() - k).equals(words[j].substring(0, k))) {
-//                        overlaps[i][j] = k;
-//                        break;
+    int mn = Integer.MAX_VALUE;
+    int[][] overlaps;
+    List<Integer> bestOrder;
+    public String shortestSuperstring(String[] words) {
+        int n = words.length;
+        //count the overlaps between word i followed by word j
+        overlaps = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i == j) continue;
+                for (int k = Math.min(words[i].length(), words[j].length()); k > 0; k--) {
+                    if (words[i].substring(words[i].length() - k).equals(words[j].substring(0, k))) {
+                        overlaps[i][j] = k;
+                        break;
+                    }
+                }
+            }
+        }
+        int[] path = new int[n];
+        dfs(words, 0, 0, 0, path);
+//        System.out.println(bestOrder);
+        StringBuilder ans = new StringBuilder(words[bestOrder.get(0)]);
+        for (int k = 1; k < bestOrder.size(); k++) {
+            int i = bestOrder.get(k - 1);
+            int j = bestOrder.get(k);
+            ans.append(words[j].substring(overlaps[i][j]));
+        }
+        return ans.toString();
+    }
+
+    public void dfs(String[] words, int depth, int used, int curLen, int[] path) {
+        // pruning
+        if (curLen >= mn) return;
+        // reach the end
+        if (depth >= words.length) {
+            mn = curLen;
+            bestOrder = Arrays.stream(path).boxed().collect(Collectors.toList());
+            return;
+        }
+        for (int i = 0; i < words.length; i++) {
+            //Note: != 0 instead of == 1
+            if ((used & (1 << i)) != 0) {
+                continue;
+            }
+            path[depth] = i;
+            int nextLen = (depth == 0) ? words[i].length() : curLen + words[i].length() - overlaps[path[depth - 1]][i];
+            dfs(words, depth + 1, (used | (1 << i)), nextLen, path);
+        }
+    }
+
+//        public String shortestSuperstring(String[] A) {
+//            int n = A.length;
+//            int[][] overlaps = new int[n][n];
+//            for (int i = 0 ; i < n ; i++) {
+//                for (int j = 0 ; j  < n ; j++) {
+//                    if (i == j) continue;
+//                    int m = Math.min(A[i].length(), A[j].length());
+//                    for (int k = m ; k >= 0 ; k--) {
+//                        if (A[i].endsWith(A[j].substring(0, k))) {
+//                            overlaps[i][j] = k;
+//                            break;
+//                        }
 //                    }
 //                }
 //            }
-//        }
-//        int[] path = new int[n];
-//        dfs(words, 0, 0, 0, path);
-//        System.out.println(bestOrder);
-//        StringBuilder ans = new StringBuilder(words[bestOrder.get(0)]);
-//        for (int k = 1; k < bestOrder.size(); k++) {
-//            int i = bestOrder.get(k - 1);
-//            int j = bestOrder.get(k);
-//            ans.append(words[j].substring(overlaps[i][j]));
-//        }
-//        return ans.toString();
-//    }
-//
-//    public void dfs(String[] words, int cur, int used, int curLen, int[] path) {
-//        if (curLen >= mn) return;
-//        if (cur >= words.length) {
-//            mn = curLen;
-//            bestOrder = Arrays.stream(path).boxed().collect(Collectors.toList());
-//            return;
-//        }
-//        for (int i = 0; i < words.length; i++) {
-//            //Note: != 0 instead of == 1
-//            if ((used & (1 << i)) != 0) {
-//                continue;
+//            String[][] dp = new String[1 << n][n];
+//            String res = null;
+//            for (int i = 0 ; i < n ; i++){
+//                int status = 1 << i;
+//                String s = A[i] + dfs(A, dp, overlaps, status, i);
+//                if (res == null || res.length() > s.length()){
+//                    res = s;
+//                }
 //            }
-//            path[cur] = i;
-//            int nextLen = (cur == 0) ? words[i].length() : curLen + words[i].length() - overlaps[path[cur - 1]][i];
-//            dfs(words, cur + 1, (used | (1 << i)), nextLen, path);
+//            return res;
 //        }
-//    }
-
-        public String shortestSuperstring(String[] A) {
-            int n = A.length;
-            int[][] overlaps = new int[n][n];
-            for (int i = 0 ; i < n ; i++) {
-                for (int j = 0 ; j  < n ; j++) {
-                    if (i == j) continue;
-                    int m = Math.min(A[i].length(), A[j].length());
-                    for (int k = m ; k >= 0 ; k--) {
-                        if (A[i].endsWith(A[j].substring(0, k))) {
-                            overlaps[i][j] = k;
-                            break;
-                        }
-                    }
-                }
-            }
-            String[][] dp = new String[1 << n][n];
-            String res = null;
-            for (int i = 0 ; i < n ; i++){
-                int status = 1 << i;
-                String s = A[i] + dfs(A, dp, overlaps, status, i);
-                if (res == null || res.length() > s.length()){
-                    res = s;
-                }
-            }
-            return res;
-        }
-
-        private String dfs(String[] A, String[][] dp, int[][] overlaps, int status, int pre) {
-            int n = A.length;
-            if (status == (1 << n) - 1) {
-                return "";
-            }
-            if (dp[status][pre] != null) {
-                return dp[status][pre];
-            }
-            String res = null;
-            for (int i = 0 ; i < n ; i++) {
-                if ((status & (1 << i)) == 0) {
-                    int newStatus = status | (1 << i);
-                    String s = A[i].substring(overlaps[pre][i]) + dfs(A, dp, overlaps, newStatus, i);
-                    if (res == null || res.length() > s.length()) {
-                        res = s;
-                    }
-                }
-            }
-            dp[status][pre] = res;
-            return res;
-        }
+//
+//        private String dfs(String[] A, String[][] dp, int[][] overlaps, int status, int pre) {
+//            int n = A.length;
+//            if (status == (1 << n) - 1) {
+//                return "";
+//            }
+//            if (dp[status][pre] != null) {
+//                return dp[status][pre];
+//            }
+//            String res = null;
+//            for (int i = 0 ; i < n ; i++) {
+//                if ((status & (1 << i)) == 0) {
+//                    int newStatus = status | (1 << i);
+//                    String s = A[i].substring(overlaps[pre][i]) + dfs(A, dp, overlaps, newStatus, i);
+//                    if (res == null || res.length() > s.length()) {
+//                        res = s;
+//                    }
+//                }
+//            }
+//            dp[status][pre] = res;
+//            return res;
+//        }
 }
 //leetcode submit region end(Prohibit modification and deletion)
 
