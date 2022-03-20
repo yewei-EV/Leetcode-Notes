@@ -41,22 +41,25 @@ public class Permutations {
 class Solution {
     public List<List<Integer>> permute(int[] nums) {
         List<List<Integer>> result = new ArrayList<>();
-        dfs(result, nums, new ArrayList<>());
+        boolean[] visited = new boolean[nums.length];
+        dfs(result, nums, new ArrayList<>(), visited);
         return result;
     }
 
-    public void dfs(List<List<Integer>> result, int[] nums, List<Integer> container) {
+    public void dfs(List<List<Integer>> result, int[] nums, List<Integer> container, boolean[] visited) {
         //base case
         if (container.size() == nums.length) {
             result.add(new ArrayList<>(container));
             return;
         }
 
-        for (int num : nums) {
-            if (!container.contains(num)) {
-                container.add(num);
-                dfs(result, nums, container);
+        for (int i = 0; i < nums.length; i++) {
+            if (!visited[i]) {
+                container.add(nums[i]);
+                visited[i] = true;
+                dfs(result, nums, container, visited);
                 container.remove(container.size() - 1);
+                visited[i] = false;
             }
         }
     }
