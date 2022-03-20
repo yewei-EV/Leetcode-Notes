@@ -43,23 +43,20 @@ class Solution {
     public List<List<Integer>> subsetsWithDup(int[] nums) {
         List<List<Integer>> result = new ArrayList<>();
         List<Integer> temp = new ArrayList<>();
-        boolean[] visited = new boolean[nums.length+1];
         Arrays.sort(nums);
-        dfs(nums, result, temp,0, visited);
+        dfs(nums, result, temp,0);
         return result;
     }
 
-    public void dfs(int[] nums, List<List<Integer>> result, List<Integer> temp, int index, boolean[] visited) {
+    public void dfs(int[] nums, List<List<Integer>> result, List<Integer> temp, int index) {
         result.add(new ArrayList<>(temp));
         for (int i = index; i < nums.length; i++) {
-            if (i >= 1 && !visited[i-1] && nums[i] == nums[i-1]) {
+            if (i != index && nums[i] == nums[i-1]) {
                 continue;
             }
             temp.add(nums[i]);
-            visited[i] = true;
-            dfs(nums, result, temp,i+1, visited);
+            dfs(nums, result, temp,i+1);
             temp.remove(temp.size()-1);
-            visited[i] = false;
         }
     }
 }
