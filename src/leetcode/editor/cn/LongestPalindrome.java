@@ -64,7 +64,7 @@ class Solution {
                 ans += c;
             } else {
                 //only can happen once
-                if (ans % 2 == 0 && flag) {
+                if (flag) {
                     ans += c;
                     flag = false;
                 } else {
