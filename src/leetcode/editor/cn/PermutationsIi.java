@@ -48,25 +48,26 @@ class Solution {
     public List<List<Integer>> permuteUnique(int[] nums) {
         List<List<Integer>> result = new ArrayList<>();
         Arrays.sort(nums);
-        boolean[] visited = new boolean[nums.length];
+        int visited = 0;
         backtracking(nums, result, new ArrayList<>(), visited);
         return result;
     }
 
-    public void backtracking(int[] nums, List<List<Integer>> result, List<Integer> temp, boolean[] visited) {
+    public void backtracking(int[] nums, List<List<Integer>> result, List<Integer> temp, int visited) {
         // base case
         if (temp.size() == nums.length) {
             result.add(new ArrayList<>(temp));
         } else {
             for (int i = 0; i < nums.length; ++i) {
-                if (visited[i] || (i > 0 && nums[i] == nums[i - 1] && !visited[i-1])) {
+                if ((visited & (1 << i)) != 0 || (i > 0 && nums[i] == nums[i - 1] && (visited & (1 << (i-1))) == 0)) {
                     continue;
                 }
-                visited[i] = true;
+                int prev = visited;
+                visited = (visited | 1 << i);
                 temp.add(nums[i]);
                 backtracking(nums, result, temp, visited);
                 temp.remove(temp.size() - 1);
-                visited[i] = false;
+                visited = prev;
             }
         }
     }
