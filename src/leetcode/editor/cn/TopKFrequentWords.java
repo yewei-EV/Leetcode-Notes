@@ -55,14 +55,14 @@ public class TopKFrequentWords {
     //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
     public List<String> topKFrequent(String[] words, int k) {
-        Map<String, Integer> cnt = new HashMap<String, Integer>();
+        Map<String, Integer> cnt = new HashMap<>();
         for (String word : words) {
             cnt.put(word, cnt.getOrDefault(word, 0) + 1);
         }
         // Min Heap
         PriorityQueue<Map.Entry<String, Integer>> queue = new PriorityQueue<>((o1, o2) -> {
             if (Objects.equals(o1.getValue(), o2.getValue())) {
-                return o2.getKey().compareTo(o1.getKey());
+                return o1.getKey().compareTo(o2.getKey());
             } else {
                 return o1.getValue() - o2.getValue();
             }
