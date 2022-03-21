@@ -85,7 +85,9 @@ class Solution {
             list.add(str);
             map.put(node, list);
         }
-        return new ArrayList<>(map.values());
+        List<List<String>> res = new ArrayList<>();
+        res.addAll(map.values());
+        return res;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
