@@ -50,40 +50,40 @@ public class LongestConsecutiveSequence {
 class Solution {
     public int longestConsecutive(int[] nums) {
         //Method 1
-        Map<Integer, Integer> map = new HashMap<>();
-        for (int num : nums) {
-            map.put(num, num);
-        }
-        int ans = 0;
-        for (int num : nums) {
-            int right = map.get(num);
-            // 遍历得到最远的右边界
-            while (map.containsKey(right + 1)) {
-                right = map.get(right + 1);
-            }
-            // 更新右边界
-            map.put(num, right);
-            // 更新答案
-            ans = Math.max(ans, right - num + 1);
-        }
-        return ans;
-
-        //Method 2 Faster
-//        Set<Integer> set = new HashSet<>();
+//        Map<Integer, Integer> map = new HashMap<>();
 //        for (int num : nums) {
-//            set.add(num);
+//            map.put(num, num);
 //        }
 //        int ans = 0;
-//        for (int num : set) {
-//            int cur = num;
-//            if (!set.contains(cur - 1)) {
-//                while (set.contains(cur + 1)) {
-//                    cur++;
-//                }
+//        for (int num : nums) {
+//            int right = map.get(num);
+//            // 遍历得到最远的右边界
+//            while (map.containsKey(right + 1)) {
+//                right = map.get(right + 1);
 //            }
-//            ans = Math.max(ans, cur - num + 1);
+//            // 更新右边界
+//            map.put(num, right);
+//            // 更新答案
+//            ans = Math.max(ans, right - num + 1);
 //        }
 //        return ans;
+
+        //Method 2 Faster
+        Set<Integer> set = new HashSet<>();
+        for (int num : nums) {
+            set.add(num);
+        }
+        int ans = 0;
+        for (int num : set) {
+            int cur = num;
+            if (!set.contains(cur - 1)) {
+                while (set.contains(cur + 1)) {
+                    cur++;
+                }
+            }
+            ans = Math.max(ans, cur - num + 1);
+        }
+        return ans;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
