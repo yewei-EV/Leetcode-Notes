@@ -82,6 +82,8 @@
 package leetcode.editor.cn;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeSet;
 
 public class LfuCache {
     public static void main(String[] args) {
@@ -89,111 +91,85 @@ public class LfuCache {
         System.out.println("Hello world");
     }
     //leetcode submit region begin(Prohibit modification and deletion)
-class LFUCache {
-        HashMap<Integer, Node> cache; // 存储缓存的内容
-        HashMap<Integer, DoubleList> freqMap; // 存储每个频次对应的双向链表
-        int size;
+    class LFUCache {
+
+        int time;
         int capacity;
-        int min; // 存储当前最小频次
+        Map<Integer, Node> cache;
+        TreeSet<Node> set;
 
         public LFUCache(int capacity) {
-            cache = new HashMap<>(capacity);
-            freqMap = new HashMap<>();
+            this.time = 0;
             this.capacity = capacity;
+            this.cache = new HashMap<>();
+            this.set = new TreeSet<>();
         }
 
         public int get(int key) {
-            Node node = cache.get(key);
-            if (node == null) {
-                return -1;
-            }
-            freqInc(node);
-            return node.value;
+            if (capacity == 0 || !cache.containsKey(key)) return -1;
+            Node newNode = cache.get(key);
+            set.remove(newNode);
+            newNode.cnt++;
+            newNode.time = time;
+            set.add(newNode);
+            return newNode.value;
         }
 
         public void put(int key, int value) {
-            if (capacity == 0) {
-                return;
-            }
-            Node node = cache.get(key);
-            if (node != null) {
-                node.value = value;
-                freqInc(node);
+            if (capacity == 0) return;
+            if (!cache.containsKey(key)) {
+                // if over capacity
+                if (cache.size() == capacity) {
+                    cache.remove(set.first().key);
+                    set.remove(set.first());
+                }
+                Node node = new Node(1, time, key, value);
+                cache.put(key, node);
+                set.add(node);
             } else {
-                if (size == capacity) {
-                    DoubleList minFreqLinkedList = freqMap.get(min);
-                    cache.remove(minFreqLinkedList.tail.pre.key);
-                    minFreqLinkedList.removeNode(minFreqLinkedList.tail.pre); // 这里不需要维护min, 因为下面add了newNode后min肯定是1.
-                    size--;
-                }
-                Node newNode = new Node(key, value);
+                Node newNode = cache.get(key);
+                set.remove(newNode);
+                newNode.cnt++;
+                newNode.time = time;
+                newNode.value = value;
+                set.add(newNode);
                 cache.put(key, newNode);
-                DoubleList linkedList = freqMap.get(1);
-                if (linkedList == null) {
-                    linkedList = new DoubleList();
-                    freqMap.put(1, linkedList);
-                }
-                linkedList.addNode(newNode);
-                size++;
-                min = 1;
             }
+            time++;
         }
 
-        void freqInc(Node node) {
-            // 从原freq对应的链表里移除, 并更新min
-            int freq = node.freq;
-            DoubleList linkedList = freqMap.get(freq);
-            linkedList.removeNode(node);
-            if (freq == min && linkedList.head.next == linkedList.tail) {
-                min = freq + 1;
-            }
-            // 加入新freq对应的链表
-            node.freq++;
-            linkedList = freqMap.get(freq + 1);
-            if (linkedList == null) {
-                linkedList = new DoubleList();
-                freqMap.put(freq + 1, linkedList);
-            }
-            linkedList.addNode(node);
-        }
     }
 
-    class Node {
+    class Node implements Comparable<Node> {
+        int cnt;
+        int time;
         int key;
         int value;
-        int freq = 1;
-        Node pre;
-        Node next;
 
-        public Node() {}
-
-        public Node(int key, int value) {
+        public Node(int cnt, int time, int key, int value) {
+            this.cnt = cnt;
+            this.time = time;
             this.key = key;
             this.value = value;
         }
-    }
 
-    class DoubleList {
-        Node head;
-        Node tail;
 
-        public DoubleList() {
-            head = new Node();
-            tail = new Node();
-            head.next = tail;
-            tail.pre = head;
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o instanceof Node) {
+                Node object = (Node) o;
+                return object.cnt == this.cnt && object.time == this.time;
+            }
+            return false;
         }
 
-        void removeNode(Node node) {
-            node.pre.next = node.next;
-            node.next.pre = node.pre;
+        public int hashCode() {
+            return cnt * 1000000007 + time;
         }
 
-        void addNode(Node node) {
-            node.next = head.next;
-            head.next.pre = node;
-            head.next = node;
-            node.pre = head;
+        @Override
+        public int compareTo(Node o) {
+            return cnt == o.cnt ? time - o.time : cnt - o.cnt;
         }
     }
 
