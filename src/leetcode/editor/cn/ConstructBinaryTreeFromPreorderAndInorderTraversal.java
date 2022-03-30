@@ -37,6 +37,10 @@
 // Related Topics 树 数组 哈希表 分治 二叉树 👍 1506 👎 0
 
 package leetcode.editor.cn;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class ConstructBinaryTreeFromPreorderAndInorderTraversal {
     public static void main(String[] args) {
         Solution solution = new ConstructBinaryTreeFromPreorderAndInorderTraversal().new Solution();
@@ -57,8 +61,31 @@ public class ConstructBinaryTreeFromPreorderAndInorderTraversal {
   }
 
 class Solution {
-    public TreeNode buildTree(int[] preorder, int[] inorder) {
 
+    Map<Integer, Integer> inorderMap = new HashMap<>();
+
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        // preorder: root left right
+        // inorder: left root right
+        // for first element in preorder, it is the root
+        //  find the root in inorder, so left part in inorder is the left subtree
+        int n = preorder.length;
+        for (int i = 0; i < n; i++) {
+            inorderMap.put(inorder[i], i);
+        }
+        return helper(preorder, inorder, 0, n-1, 0, n-1);
+    }
+
+    public TreeNode helper(int[] preorder, int[] inorder, int preL, int preR, int inL, int inR) {
+        if (preL > preR) {
+            return null;
+        }
+        TreeNode root = new TreeNode(preorder[preL]);
+        int rootIdx = inorderMap.get(preorder[preL]);
+        int leftSize = rootIdx - inL;
+        root.left = helper(preorder, inorder, preL + 1, preL + leftSize, inL, rootIdx - 1);
+        root.right = helper(preorder, inorder, preL + leftSize + 1, preR, rootIdx + 1, inR);
+        return root;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
