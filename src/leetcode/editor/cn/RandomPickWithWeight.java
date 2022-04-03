@@ -95,15 +95,15 @@ class Solution {
         int n = prefixSum.length;
         int t = (int) (Math.random() * prefixSum[n - 1]) + 1;
         int l = 1, r = n - 1;
-        while (l < r) {
+        while (l <= r) {
             int mid = l + r >> 1;
             if (prefixSum[mid] >= t) {
-                r = mid;
+                r = mid - 1;
             } else {
                 l = mid + 1;
             }
         }
-        return r - 1;
+        return r;
     }
 }
 
