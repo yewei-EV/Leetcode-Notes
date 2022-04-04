@@ -94,7 +94,7 @@ class Solution {
     public int pickIndex() {
         int n = prefixSum.length;
         int t = (int) (Math.random() * prefixSum[n - 1]) + 1;
-        int l = 1, r = n - 1;
+        int l = 0, r = n - 1;
         while (l <= r) {
             int mid = l + r >> 1;
             if (prefixSum[mid] >= t) {
